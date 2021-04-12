@@ -1,6 +1,9 @@
 #include <msp430.h>
 #include "stateMachines.h"
 #include "led.h"
+#include "switches.h"
+
+char state_song = 0;
 
 void toggle_red()		/* always toggle! */
 {
@@ -54,6 +57,9 @@ void toggle_green()	/* only toggle green if red is on!  */
       interrupts = 0;
     }
     break;
+  case 5:
+    green_on = 1;
+    break;
   }
   led_update();
 }
@@ -69,7 +75,7 @@ void do_blink()
   }  
 }
 
-void state_advance()		/* alternate between toggling red & green */
+void state_advance()
 {
   static enum {B=0, F=1} moving_green = F;
 
@@ -95,5 +101,43 @@ void state_advance()		/* alternate between toggling red & green */
     moving_green = B;
     state_green = 4;
     break;
+  }
+}
+
+void change_buzzer() { 
+  if(switch_down_3){
+    buzzer_set_period(1000);
+  }else if(switch_down_2){
+    switch(state_song){
+    case 0:
+      buzzer_set_period(630);
+      break;
+    case 1:
+      buzzer_set_period(750);
+      break;
+    case 2:
+      buzzer_set_period(630);
+      break;
+    case 3:
+      buzzer_set_period(750);
+      break;
+    case 4:
+      buzzer_set_period(630);
+      break;
+    case 5:
+      buzzer_set_period(950);
+      break;
+    case 6:
+      buzzer_set_period(840);
+      break;
+    case 7:
+      buzzer_set_period(750);
+      break;
+    case 8:
+      buzzer_set_period(1260);
+      break;
+    }   
+  }else{
+    buzzer_set_period(0);
   }
 }

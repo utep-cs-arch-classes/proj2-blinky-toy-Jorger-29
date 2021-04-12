@@ -4,6 +4,5 @@
 
 	.global buzzer_setter_assembly
 
-	buzzer_init_assembly
-	:
+buzzer_init_assembly:
 	call #buzzer_init
